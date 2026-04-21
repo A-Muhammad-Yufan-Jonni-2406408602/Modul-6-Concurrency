@@ -1,6 +1,6 @@
 # Modul-6-Concurrency
 
-## Commit 1 Reflection notes
+**Commit 1 Reflection notes**
 
 Pada milestone ini, saya mempelajari bagaimana membuat web server sederhana menggunakan Rust dengan memanfaatkan `TcpListener` untuk menerima koneksi dari client (browser). Program awal hanya menerima koneksi dan mencetak pesan “Connection established!”, yang menunjukkan bahwa server berhasil mendengarkan request dari browser pada alamat `127.0.0.1:7878`.
 
@@ -14,3 +14,11 @@ Dari hasil output, terlihat bahwa browser mengirimkan request dalam format HTTP,
 Hal ini memberikan pemahaman bahwa komunikasi antara browser dan server menggunakan protokol HTTP berbasis teks, dan server perlu memproses request tersebut untuk memberikan response yang sesuai.
 
 Selain itu, saya juga memahami bahwa browser dapat mengirim beberapa request sekaligus (retry), sehingga pesan “Connection established!” bisa muncul lebih dari satu kali. Ini merupakan perilaku normal dari browser.
+
+**Commit 2 Reflection notes**
+
+Pada tahap ini, saya memodifikasi fungsi handle_connection agar server tidak hanya menerima request, tetapi juga mengirimkan response berupa halaman HTML ke browser. Saya mempelajari bahwa server harus mengirim response HTTP yang terdiri dari status line, header (seperti Content-Length), dan body (isi HTML). File hello.html dibaca menggunakan fs::read_to_string, lalu dikirim ke browser melalui TcpStream.
+
+Dari percobaan ini, saya memahami bagaimana browser menampilkan halaman berdasarkan response dari server, serta pentingnya format HTTP yang benar agar response dapat diproses dengan baik. Sekarang server sudah mampu memberikan output nyata berupa halaman web sederhana, bukan hanya mencetak request di terminal.
+
+![alt text](image/commit2.png)
