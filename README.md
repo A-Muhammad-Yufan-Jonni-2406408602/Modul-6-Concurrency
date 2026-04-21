@@ -22,3 +22,13 @@ Pada tahap ini, saya memodifikasi fungsi handle_connection agar server tidak han
 Dari percobaan ini, saya memahami bagaimana browser menampilkan halaman berdasarkan response dari server, serta pentingnya format HTTP yang benar agar response dapat diproses dengan baik. Sekarang server sudah mampu memberikan output nyata berupa halaman web sederhana, bukan hanya mencetak request di terminal.
 
 ![alt text](image/commit2.png)
+
+
+**Commit 3 Reflection notes**
+
+
+Pada tahap ini, saya mengembangkan server yang sebelumnya selalu memberikan halaman hello.html untuk semua request, menjadi lebih cerdas dengan memvalidasi request yang masuk. Sekarang, jika user mengakses path `/`, server akan menampilkan halaman utama, sedangkan jika mengakses path lain seperti `/bad`, server akan memberikan response 404 Not Found. Hal ini membuat perilaku server lebih realistis seperti web server pada umumnya.
+
+Selain itu, dilakukan refactoring dengan memisahkan logika penentuan response (memilih status dan file HTML) dari proses pengiriman response ke client. Refactoring ini diperlukan agar kode lebih terstruktur, mudah dibaca, dan mudah dikembangkan, terutama jika nantinya ingin menambahkan lebih banyak routing atau fitur lain. Dengan perubahan ini, saya memahami pentingnya validasi request serta bagaimana membangun response yang sesuai berdasarkan input dari client.
+
+![alt text](image/commit3.png)
