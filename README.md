@@ -37,3 +37,10 @@ Pada tahap ini, ditunjukkan bahwa server masih menggunakan single thread, sehing
 
 Dari simulasi ini dapat dipahami bahwa penggunaan single thread menimbulkan bottleneck pada server ketika menangani banyak request secara bersamaan. Kondisi ini tidak ideal untuk aplikasi nyata karena dapat menurunkan performa dan pengalaman pengguna. Oleh karena itu, diperlukan pendekatan seperti multithreading agar server dapat menangani beberapa request secara paralel dan lebih responsif.
 
+
+
+Pada tahap ini, server ditingkatkan dari model sebelumnya menjadi multithreaded menggunakan ThreadPool. Berbeda dengan pendekatan sebelumnya yang membuat thread baru untuk setiap request, ThreadPool membuat sejumlah thread tetap (worker) di awal dan mendistribusikan pekerjaan ke thread tersebut melalui mekanisme antrian (queue). Hal ini membuat penggunaan resource menjadi lebih efisien dan terkontrol.
+
+Cara kerja ThreadPool adalah ketika ada request masuk, tugas tersebut dikemas sebagai sebuah job (closure) dan dikirim melalui `mpsc::channel`. Setiap worker yang berjalan dalam thread terpisah akan mengambil job dari queue menggunakan `receiver` yang dibagikan dengan `Arc<Mutex<_>>`, lalu mengeksekusinya. Penggunaan `Arc` memungkinkan banyak worker berbagi akses ke receiver yang sama, sementara `Mutex` memastikan hanya satu worker yang mengambil job pada satu waktu sehingga menghindari race condition.
+
+Dengan pendekatan ini, server dapat menangani beberapa request secara paralel tanpa harus membuat thread baru terus-menerus. Hal ini meningkatkan performa dan stabilitas dibandingkan model sebelumnya, terutama ketika menangani banyak request atau request yang lambat seperti `/sleep`. Saya juga memahami bahwa desain ThreadPool membuat sistem lebih scalable dan lebih mendekati implementasi server di dunia nyata.
