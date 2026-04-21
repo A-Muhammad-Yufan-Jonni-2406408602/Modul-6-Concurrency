@@ -23,12 +23,17 @@ Dari percobaan ini, saya memahami bagaimana browser menampilkan halaman berdasar
 
 ![alt text](image/commit2.png)
 
-
 **Commit 3 Reflection notes**
-
 
 Pada tahap ini, saya mengembangkan server yang sebelumnya selalu memberikan halaman hello.html untuk semua request, menjadi lebih cerdas dengan memvalidasi request yang masuk. Sekarang, jika user mengakses path `/`, server akan menampilkan halaman utama, sedangkan jika mengakses path lain seperti `/bad`, server akan memberikan response 404 Not Found. Hal ini membuat perilaku server lebih realistis seperti web server pada umumnya.
 
 Selain itu, dilakukan refactoring dengan memisahkan logika penentuan response (memilih status dan file HTML) dari proses pengiriman response ke client. Refactoring ini diperlukan agar kode lebih terstruktur, mudah dibaca, dan mudah dikembangkan, terutama jika nantinya ingin menambahkan lebih banyak routing atau fitur lain. Dengan perubahan ini, saya memahami pentingnya validasi request serta bagaimana membangun response yang sesuai berdasarkan input dari client.
 
 ![alt text](image/commit3.png)
+
+**Commit 4 Reflection notes**
+
+Pada tahap ini, ditunjukkan bahwa server masih menggunakan single thread, sehingga hanya dapat memproses satu request dalam satu waktu. Ketika ada request yang membutuhkan waktu lama, seperti endpoint `/sleep` yang menunda respons selama beberapa detik, maka request lain harus menunggu hingga proses tersebut selesai. Hal ini menyebabkan halaman lain yang seharusnya cepat diakses ikut mengalami keterlambatan.
+
+Dari simulasi ini dapat dipahami bahwa penggunaan single thread menimbulkan bottleneck pada server ketika menangani banyak request secara bersamaan. Kondisi ini tidak ideal untuk aplikasi nyata karena dapat menurunkan performa dan pengalaman pengguna. Oleh karena itu, diperlukan pendekatan seperti multithreading agar server dapat menangani beberapa request secara paralel dan lebih responsif.
+
