@@ -37,10 +37,18 @@ Pada tahap ini, ditunjukkan bahwa server masih menggunakan single thread, sehing
 
 Dari simulasi ini dapat dipahami bahwa penggunaan single thread menimbulkan bottleneck pada server ketika menangani banyak request secara bersamaan. Kondisi ini tidak ideal untuk aplikasi nyata karena dapat menurunkan performa dan pengalaman pengguna. Oleh karena itu, diperlukan pendekatan seperti multithreading agar server dapat menangani beberapa request secara paralel dan lebih responsif.
 
-
+**Commit 5 Reflection notes**
 
 Pada tahap ini, server ditingkatkan dari model sebelumnya menjadi multithreaded menggunakan ThreadPool. Berbeda dengan pendekatan sebelumnya yang membuat thread baru untuk setiap request, ThreadPool membuat sejumlah thread tetap (worker) di awal dan mendistribusikan pekerjaan ke thread tersebut melalui mekanisme antrian (queue). Hal ini membuat penggunaan resource menjadi lebih efisien dan terkontrol.
 
 Cara kerja ThreadPool adalah ketika ada request masuk, tugas tersebut dikemas sebagai sebuah job (closure) dan dikirim melalui `mpsc::channel`. Setiap worker yang berjalan dalam thread terpisah akan mengambil job dari queue menggunakan `receiver` yang dibagikan dengan `Arc<Mutex<_>>`, lalu mengeksekusinya. Penggunaan `Arc` memungkinkan banyak worker berbagi akses ke receiver yang sama, sementara `Mutex` memastikan hanya satu worker yang mengambil job pada satu waktu sehingga menghindari race condition.
 
 Dengan pendekatan ini, server dapat menangani beberapa request secara paralel tanpa harus membuat thread baru terus-menerus. Hal ini meningkatkan performa dan stabilitas dibandingkan model sebelumnya, terutama ketika menangani banyak request atau request yang lambat seperti `/sleep`. Saya juga memahami bahwa desain ThreadPool membuat sistem lebih scalable dan lebih mendekati implementasi server di dunia nyata.
+
+**Bonus Reflection notes**
+
+Pada tahap ini, saya memodifikasi fungsi pembuatan `ThreadPool` dengan menambahkan fungsi `build` sebagai alternatif dari `new`. Perbedaan utama antara keduanya adalah pada cara menangani error. Fungsi new menggunakan `assert!` yang akan langsung menghentikan program (panic) jika ukuran thread bernilai nol, sedangkan fungsi `build` menggunakan tipe `Result` sehingga error dapat ditangani dengan lebih aman dan fleksibel.
+
+Dengan menggunakan `Result`, program tidak langsung crash, tetapi memberikan kesempatan kepada developer untuk menentukan bagaimana menangani error tersebut, misalnya dengan menampilkan pesan atau fallback ke nilai default. Pendekatan ini lebih sesuai untuk pengembangan aplikasi yang lebih kompleks dan mendekati praktik di dunia nyata.
+
+Dari perubahan ini, saya memahami pentingnya error handling yang baik dalam Rust, serta perbedaan antara pendekatan yang bersifat cepat (panic) dan pendekatan yang lebih robust (Result-based). Penggunaan fungsi `build` membuat kode menjadi lebih aman, fleksibel, dan siap untuk dikembangkan lebih lanjut.
